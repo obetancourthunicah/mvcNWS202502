@@ -16,7 +16,7 @@ class Categories extends Table
         );
     }
 
-    public static function getCategoriesById(int $id): array
+    public static function getCategoriesById(int $id)
     {
         $sqlstr = "SELECT * from categorias where id = :idCategoria;";
         return self::obtenerUnRegistro($sqlstr, ["idCategoria" => $id]);
