@@ -27,7 +27,10 @@ class Category extends PublicController
             "selectedACT" => "",
             "selectedINA" => "",
             "selectedRTR" => "",
-            "errors" => []
+            "errors" => [],
+            "cancelLabel" => "Cancel",
+            "showConfirm" => true,
+            "readonly" => ""
         ];
         $this->modes = [
             "INS" => "New Category",
@@ -152,10 +155,22 @@ class Category extends PublicController
                 "Trying to post without parameter ESTADO on body"
             );
         }
+        if (!isset($_POST["xsrtoken"])) {
+            $this->throwError(
+                "Something went wrong, try again.",
+                "Trying to post without parameter XSRTOKEN on body"
+            );
+        }
         if (intval($_POST["id"]) !== $this->viewData["id"]) {
             $this->throwError(
                 "Something went wrong, try again.",
                 "Trying to post with inconsistent parameter ID value has: " . $this->viewData["id"] . " recieved: " . $_POST["id"]
+            );
+        }
+        if ($_POST["xsrtoken"] !==  $_SESSION[$this->name . "-xsrtoken"]) {
+            $this->throwError(
+                "Something went wrong, try again.",
+                "Trying to post with inconsistent parameter XSRToken value has: " . $_SESSION[$this->name . "-xsrtoken"] . " recieved: " . $_POST["xsrtoken"]
             );
         }
 
@@ -228,5 +243,17 @@ class Category extends PublicController
                 $this->viewData["errors_" . $scope] = $errorsArray;
             }
         }
+
+        if ($this->viewData["mode"] === "DSP") {
+            $this->viewData["cancelLabel"] = "Back";
+            $this->viewData["showConfirm"] = false;
+        }
+
+        if ($this->viewData["mode"] === "DSP" || $this->viewData["mode"] === "DEL") {
+            $this->viewData["readonly"] = "readonly";
+        }
+        $this->viewData["timestamp"] = time();
+        $this->viewData["xsrtoken"] = hash("sha256", json_encode($this->viewData));
+        $_SESSION[$this->name . "-xsrtoken"] = $this->viewData["xsrtoken"];
     }
 }
