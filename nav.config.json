@@ -16,6 +16,11 @@
       "id":"Menu_PaymentCheckout",
       "nav_url": "index.php?page=Checkout_Checkout",
       "nav_label": "Carretilla de Compra"
+    },
+    {
+      "id":"Menu_Maintenance_Categories",
+      "nav_url": "index.php?page=Maintenance-Products-Categories",
+      "nav_label": "Categorías"
     }
   ]
 }
